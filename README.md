@@ -1,38 +1,39 @@
-# as.grokbot.experiment
+# Tech Demos Monorepo
 
-Experiment with Grok Build Skills (x.ai/skills + plugins).
+Sticky Bun monorepo for Grok Bot "Tech Demos": a growing collection of small, single-user demo apps, each built by a cloud agent from an approved idea (originally seeded by experiments with [Grok Build Skills](https://x.ai/skills) and plugins).
 
-## Overview
+This repository is permanent — demos accumulate here over time. **No new repos are created per demo.**
 
-This repository is a playground for exploring and testing Grok Build Skills functionality, including custom skills and plugin development with x.ai.
-
-## Getting Started
-
-To get started with this project:
-
-1. Clone the repository
-2. Install dependencies
-3. Explore the experimental code and skills
-
-## Project Structure
+## Layout
 
 ```
-as.grokbot.experiment/
-├── README.md
-└── [Add your project structure here]
+AGENTS.md                     # Instructions for cloud agents working here
+README.md                     # This file
+.gitignore                    # Bun/Node ignores
+apps/                         # One self-contained demo per kebab-case slug
+  <slug>/                     #   e.g. apps/grok-build-skill-demo/
+    PLAN.md                   #   Written before implementation (see skill)
+    package.json              #   Each app installs and runs independently
+skills/
+  project-planning/SKILL.md   # Planning skill agents follow before coding
+tracking/
+  seen-bookmarks.json         # Scout bot state: proposed / built / skipped ideas
 ```
 
-## Skills & Plugins
+## How it works
 
-This project experiments with:
-- Custom Grok skills
-- x.ai plugin development
-- Integration patterns
+1. A scout bot proposes demo ideas and records them in `tracking/seen-bookmarks.json`.
+2. An agent picks up an approved idea, plans it per `skills/project-planning/`, and implements it under `apps/<slug>/`.
+3. The agent opens a PR touching only its app folder, attaching at least one screenshot **and** one video of the running app.
 
-## Contributing
+## Running a demo
 
-Feel free to add experiments, test cases, and documentation as you explore different approaches.
+Each app is fully independent — there is no root workspace or root `package.json`:
 
-## License
+```bash
+cd apps/<slug>
+bun install
+bun run dev
+```
 
-[Add your preferred license here]
+See `AGENTS.md` for the full rules agents must follow.

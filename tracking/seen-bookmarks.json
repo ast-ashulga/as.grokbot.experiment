@@ -1,5 +1,6 @@
 {
-  "proposed": [
+  "proposed": [],
+  "built": [
     {
       "id": "2099657258959593482",
       "title": "Grok Build Skills (x.ai/skills + plugins)",
@@ -8,6 +9,5 @@
       "slug": "grok-build-skill-demo"
     }
   ],
-  "built": [],
   "skipped": []
 }

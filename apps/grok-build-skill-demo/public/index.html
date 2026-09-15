@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Grok Build Skill Playground</title>
+<style>
+  :root {
+    --bg: #0b0b0f;
+    --panel: #14141b;
+    --panel-2: #1b1b25;
+    --border: #2a2a38;
+    --text: #e8e8f0;
+    --muted: #8b8b9e;
+    --accent: #7c6cff;
+    --accent-soft: rgba(124, 108, 255, 0.14);
+    --green: #4ade80;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: radial-gradient(1200px 600px at 70% -10%, #1a1530 0%, var(--bg) 55%);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  header {
+    padding: 28px 36px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: baseline; gap: 14px;
+  }
+  header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+  header .tag {
+    font-size: 12px; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px;
+  }
+  main {
+    display: grid; grid-template-columns: 300px 1fr;
+    gap: 24px; padding: 24px 36px; max-width: 1100px; margin: 0 auto;
+  }
+  .panel {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+  }
+  .panel-title {
+    padding: 14px 18px; font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .live-dot { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--green); text-transform: none; letter-spacing: 0; }
+  .live-dot::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
+  #skill-list { list-style: none; }
+  #skill-list li {
+    padding: 16px 18px; cursor: pointer; border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  #skill-list li:last-child { border-bottom: none; }
+  #skill-list li:hover { background: var(--panel-2); }
+  #skill-list li.active { background: var(--accent-soft); border-left: 3px solid var(--accent); padding-left: 15px; }
+  #skill-list .skill-name { font-weight: 600; font-size: 14px; display: flex; gap: 8px; align-items: baseline; }
+  #skill-list .skill-version { font-size: 11px; color: var(--muted); font-weight: 400; }
+  #skill-list .skill-desc { font-size: 12px; color: var(--muted); margin-top: 5px; line-height: 1.5; }
+  .runner { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+  label { font-size: 13px; color: var(--muted); }
+  textarea {
+    width: 100%; min-height: 130px; resize: vertical;
+    background: var(--panel-2); color: var(--text);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 14px; font-size: 14px; line-height: 1.6; font-family: inherit;
+  }
+  textarea:focus { outline: none; border-color: var(--accent); }
+  button {
+    align-self: flex-start;
+    background: var(--accent); color: #fff; border: none; border-radius: 10px;
+    padding: 10px 26px; font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: filter 0.15s;
+  }
+  button:hover { filter: brightness(1.15); }
+  button:disabled { opacity: 0.5; cursor: wait; }
+  #output { display: none; flex-direction: column; gap: 14px; }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+  .stat {
+    background: var(--panel-2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 14px;
+  }
+  .stat .value { font-size: 22px; font-weight: 700; color: var(--accent); }
+  .stat .label { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .top-words { display: flex; flex-wrap: wrap; gap: 8px; }
+  .word-chip {
+    background: var(--accent-soft); border: 1px solid var(--accent);
+    border-radius: 999px; padding: 4px 12px; font-size: 13px;
+  }
+  .word-chip b { color: var(--accent); margin-left: 5px; }
+  .section-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Grok Build — Skill Playground</h1>
+  <span class="tag">single-user local demo</span>
+</header>
+<main>
+  <div class="panel">
+    <div class="panel-title">Skills <span class="live-dot">live config</span></div>
+    <ul id="skill-list"></ul>
+  </div>
+  <div class="panel">
+    <div class="panel-title" id="runner-title">Run skill</div>
+    <div class="runner">
+      <label id="input-label" for="skill-input"></label>
+      <textarea id="skill-input"></textarea>
+      <button id="run-btn">Run skill</button>
+      <div id="output">
+        <div class="section-label">Result</div>
+        <div class="stats-grid" id="stats"></div>
+        <div class="section-label">Top words</div>
+        <div class="top-words" id="top-words"></div>
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+  let skills = [];
+  let activeSkill = null;
+
+  const listEl = document.getElementById("skill-list");
+  const inputEl = document.getElementById("skill-input");
+  const labelEl = document.getElementById("input-label");
+  const titleEl = document.getElementById("runner-title");
+  const runBtn = document.getElementById("run-btn");
+  const outputEl = document.getElementById("output");
+
+  async function loadSkills() {
+    skills = await (await fetch("/api/skills")).json();
+    listEl.innerHTML = "";
+    for (const skill of skills) {
+      const li = document.createElement("li");
+      li.innerHTML =
+        '<div class="skill-name">' + skill.name +
+        ' <span class="skill-version">v' + skill.version + "</span></div>" +
+        '<div class="skill-desc">' + skill.description + "</div>";
+      li.onclick = () => selectSkill(skill, li);
+      listEl.appendChild(li);
+      if (!activeSkill) selectSkill(skill, li);
+    }
+  }
+
+  function selectSkill(skill, li) {
+    activeSkill = skill;
+    [...listEl.children].forEach((el) => el.classList.remove("active"));
+    li.classList.add("active");
+    titleEl.textContent = "Run skill: " + skill.name;
+    labelEl.textContent = skill.input.label;
+    inputEl.placeholder = skill.input.placeholder;
+    if (!inputEl.value) inputEl.value = skill.input.example;
+    outputEl.style.display = "none";
+  }
+
+  runBtn.onclick = async () => {
+    if (!activeSkill) return;
+    runBtn.disabled = true;
+    try {
+      const res = await fetch("/api/skills/" + activeSkill.id + "/run", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: inputEl.value }),
+      });
+      renderResult(await res.json());
+    } finally {
+      runBtn.disabled = false;
+    }
+  };
+
+  function renderResult(r) {
+    const stats = [
+      [r.words, "words"],
+      [r.sentences, "sentences"],
+      [r.characters, "characters"],
+      [r.charactersNoSpaces, "chars (no spaces)"],
+      [r.readingTimeSeconds + "s", "reading time"],
+    ];
+    document.getElementById("stats").innerHTML = stats
+      .map(([v, l]) => '<div class="stat"><div class="value">' + v + '</div><div class="label">' + l + "</div></div>")
+      .join("");
+    document.getElementById("top-words").innerHTML = r.topWords.length
+      ? r.topWords.map((w) => '<span class="word-chip">' + w.word + "<b>×" + w.count + "</b></span>").join("")
+      : '<span style="color:var(--muted);font-size:13px">no non-trivial words found</span>';
+    outputEl.style.display = "flex";
+  }
+
+  loadSkills();
+</script>
+</body>
+</html>

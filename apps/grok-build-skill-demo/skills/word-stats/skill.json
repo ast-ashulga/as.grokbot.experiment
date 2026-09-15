@@ -1,0 +1,12 @@
+{
+  "id": "word-stats",
+  "name": "Word Stats",
+  "version": "1.0.0",
+  "description": "Analyze a block of text: word/character/sentence counts, estimated reading time, and the most frequent words.",
+  "entry": "action.ts",
+  "input": {
+    "label": "Text to analyze",
+    "placeholder": "Paste any text here — a tweet, a paragraph, an essay...",
+    "example": "Grok Build skills are just config plus one action. Edit the config, refresh, and the listing updates. Skills stay small; skills stay honest."
+  }
+}

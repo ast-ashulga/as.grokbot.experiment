@@ -19,9 +19,11 @@ Every PR that adds or changes a demo **must attach both**:
 
 These are validation artifacts proving the demo works. A PR without both will not be accepted.
 
+**Do NOT commit screenshot/video binaries into `apps/`** — attach validation artifacts to the PR itself, not the repo.
+
 ## Tracking
 
-`tracking/seen-bookmarks.json` is maintained by the scout bot that proposes demo ideas. It has `proposed`, `built`, and `skipped` lists. Do not casually rewrite or remove entries owned by other agents; only update the entry for your own demo (e.g. moving it from `proposed` to `built` when your PR merges, if instructed).
+`tracking/seen-bookmarks.json` is maintained by the scout bot that proposes demo ideas. It has `proposed`, `built`, and `skipped` lists; **list membership is the status** (entries carry no per-item `status` field). Do not casually rewrite or remove entries owned by other agents; only update the entry for your own demo (e.g. moving it from `proposed` to `built` when your PR merges, if instructed).
 
 ## Layout
 
